@@ -4,6 +4,7 @@ import pandas as pd
 import glob
 import os
 import shutil
+from PyPDF2 import PdfFileWriter, PdfFileReader
 # %% parameters
 LabName = 'Block 1 Full Report [Total Pts: 20 Score] |1586594'
 # %%
@@ -26,3 +27,12 @@ for i in range(len(firstName)):
     if not os.path.exists(targetPath):
         shutil.copy(sourcesPath, targetPath)
 # %%
+filePath = glob.glob('./sheet/*.pdf')
+for i in range(len(filePath)):
+    path = filePath[i]
+    email = filePath[i].split('.')[-2].split('_')[-1] 
+    inputpdf = PdfFileReader(open(filePath[i], "rb"))
+    output = PdfFileWriter()
+    output.addPage(inputpdf.getPage(0))
+    with open('./sheet/' + email + '.pdf', "wb") as outputStream:
+        output.write(outputStream)
